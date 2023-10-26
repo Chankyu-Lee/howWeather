@@ -137,6 +137,32 @@ public class CourseWeather {
                 + "\nwd = " + wd + "\nws = " + ws + "\nsky = " + sky + "\nrhm = " + rhm + "\npop = " + pop;
     }
 
+    public String getSkyConditionString() {
+        switch ((int)sky) {
+            case 1:
+                return "맑음 (Clear)";
+            case 2:
+                return "구름 조금 (Partly Cloudy)";
+            case 3:
+                return "구름 많음 (Mostly Cloudy)";
+            case 4:
+                return "흐림 (Cloudy)";
+            case 5:
+                return "비 (Rain)";
+            case 6:
+                return "눈 (Snow)";
+            case 7:
+                return "비/눈 (Rain/Snow)";
+            case 8:
+                return "눈발 (Snow Flurries)";
+            case 9:
+                return "우박 (Hail)";
+            case 10:
+                return "천둥번개 (Thunderstorm)";
+            default:
+                return "알 수 없음 (Unknown)";
+        }
+    }
 
 }
 
