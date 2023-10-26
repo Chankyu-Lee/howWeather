@@ -14,11 +14,11 @@ import java.util.List;
 public class DataBase {
     private static Connection conn;
 
-    private static String csvFilePath = "기상청_관광코스별 관광지 상세날씨 조회 지점 정보_20200110.csv"; // CSV 파일 경로
-    private static String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:xe";
-    private static String username = "lck0722";
-    private static String password = "1234";
-    private static String tableName = "course_data";
+    private static final String csvFilePath = "기상청_관광코스별 관광지 상세날씨 조회 지점 정보_20200110.csv"; // CSV 파일 경로
+    private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static final String username = "lck0722";
+    private static final String password = "1234";
+    private static final String tableName = "course_data";
 
     static {
         try {
@@ -32,7 +32,7 @@ public class DataBase {
     private DataBase() {
     }
 
-    private static boolean tableExists(Connection conn, String tableName) throws SQLException {
+    private static boolean tableExists() throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM user_tables WHERE table_name = '" + tableName + "'");
         rs.next();
@@ -44,15 +44,15 @@ public class DataBase {
 
     public static void createTable() {
         try {
-            if (!tableExists(conn, tableName)) {
+            if (!tableExists()) {
                 // 테이블 생성
                 Statement stmt = conn.createStatement();
                 stmt.execute(getCreateSQL());
-                System.out.println("테이블이 생성되었습니다.");
+                System.out.println("테이블이 생성 되었습니다.");
 
                 // CSV 파일을 읽어서 데이터베이스에 삽입
-                insertCsvData(conn, csvFilePath);
-                System.out.println("데이터가 삽입되었습니다.");
+                insertCsvData();
+                System.out.println("데이터가 삽입 되었습니다.");
             }
             // 데이터베이스 연결 닫기
             conn.close();
@@ -82,7 +82,7 @@ public class DataBase {
     }
 
     // CSV 파일을 읽어서 데이터베이스에 삽입
-    private static void insertCsvData(Connection conn, String csvFilePath) throws SQLException {
+    private static void insertCsvData() throws SQLException {
         String insertSQL = "INSERT INTO " + tableName + " (theme_category, course_id, tourism_id, region_id, tourism_name, longitude, latitude, course_order, travel_time, indoor_type, theme_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath));
@@ -110,7 +110,7 @@ public class DataBase {
 
 
     public static List<CourseData> getCourseDataList(long courseId) {
-        List<CourseData> list = new ArrayList<CourseData>();
+        List<CourseData> list = new ArrayList<>();
 
         try {
             Statement stmt = conn.createStatement();
