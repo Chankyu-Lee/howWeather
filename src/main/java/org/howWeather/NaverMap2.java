@@ -66,7 +66,7 @@ public class NaverMap2 implements ActionListener {
 
                 is.close();
                 ImageIcon img = new ImageIcon(file.getName());
-                naverMap.mapLbl.setIcon(img);
+               // naverMap.mapLbl.setIcon(img);
 
             } else {
                 System.out.println(responseCode);
