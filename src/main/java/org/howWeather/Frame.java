@@ -1,13 +1,8 @@
 package org.howWeather;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class Frame {
     JTextField searchFld;
@@ -28,6 +23,9 @@ public class Frame {
         searchPan.add(searchBtn);
         searchBtn.addActionListener(new Search(this));              // pan에 생성한 버튼(searchBtn) 클릭 시 처리하는 이벤트 핸들러.
         filterBtn.addActionListener(new Filter(this));
+
+        mapLbl.setPreferredSize(new Dimension(600,660));
+        mapLbl.setText("MAP");
 
         frameCnt.add(BorderLayout.WEST, mapLbl);                          // 센터 mapLbl 세팅
         frameCnt.add(BorderLayout.EAST, searchPan);                         // 상단 searchPan 세팅
