@@ -19,7 +19,7 @@ public class NaverMap2 implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        map_service2(Long.parseLong(naverMap.address.getText()));
+        map_service2(Long.parseLong(naverMap.searchFld.getText()));
     }
 
     public void map_service2(long courseId) {
@@ -66,7 +66,7 @@ public class NaverMap2 implements ActionListener {
 
                 is.close();
                 ImageIcon img = new ImageIcon(file.getName());
-                naverMap.imageLabel.setIcon(img);
+               // naverMap.mapLbl.setIcon(img);
 
             } else {
                 System.out.println(responseCode);
