@@ -22,15 +22,16 @@ public class Frame {
         searchPan.add(searchFld);
         searchPan.add(searchBtn);
         searchBtn.addActionListener(new Search(this));              // pan에 생성한 버튼(searchBtn) 클릭 시 처리하는 이벤트 핸들러.
-        filterBtn.addActionListener(new Filter(this));
 
-        mapLbl.setPreferredSize(new Dimension(600,660));
+        mapLbl.setPreferredSize(new Dimension(700,800));
         mapLbl.setText("MAP");
+        Filter filter = new Filter();
 
-        frameCnt.add(BorderLayout.WEST, mapLbl);                          // 센터 mapLbl 세팅
-        frameCnt.add(BorderLayout.EAST, searchPan);                         // 상단 searchPan 세팅
+        frameCnt.add(BorderLayout.WEST,filter);
+        frameCnt.add(BorderLayout.CENTER, searchPan);                         // 상단 searchPan 세팅
+        frameCnt.add(BorderLayout.EAST, mapLbl);                          // 센터 mapLbl 세팅
 
-        frm.setSize(1000, 660);
+        frm.setSize(1400, 800);
         frm.setVisible(true);
 
     }
