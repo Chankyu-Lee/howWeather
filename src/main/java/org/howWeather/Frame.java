@@ -1,7 +1,6 @@
 package org.howWeather;
 
 import java.awt.*;
-
 import javax.swing.*;
 
 public class Frame {
@@ -15,10 +14,10 @@ public class Frame {
         frameCnt = frm.getContentPane();                     // JFrame 안쪽 영역.
 
         JPanel searchPan = new JPanel();
-        searchFld = new JTextField(10);
+        searchFld = new JTextField(20);
         JButton searchBtn = new JButton("검색");                      // JFrame 안쪽 영역에 들어갈 클릭 버튼
         JButton filterBtn = new JButton("필터");
-        searchPan.add(filterBtn);
+        //searchPan.add(filterBtn);
         searchPan.add(searchFld);
         searchPan.add(searchBtn);
         searchBtn.addActionListener(new Search(this));              // pan에 생성한 버튼(searchBtn) 클릭 시 처리하는 이벤트 핸들러.
