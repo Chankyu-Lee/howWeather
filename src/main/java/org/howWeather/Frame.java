@@ -6,7 +6,9 @@ import javax.swing.*;
 
 public class Frame {
     JTextField searchFld;
+    JTextField address;
     JLabel mapLbl = new JLabel();
+    JLabel imageLabel;
     Container frameCnt;
 
     public void initGUI() {
