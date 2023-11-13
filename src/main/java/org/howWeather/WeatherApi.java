@@ -1,7 +1,14 @@
 package org.howWeather;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,10 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class WeatherApi {
 
@@ -22,62 +31,43 @@ public class WeatherApi {
 
     }
 
-    private static String getWeatherDataToJsonString(long courseId) throws IOException, ParseException {
+    private static Document getWeatherDataToXml(long courseId) throws Exception {
         String apiUrl = "http://apis.data.go.kr/1360000/TourStnInfoService1/getTourStnVilageFcst1";
-        String serviceKey = "y%2Bcyi5tgE7yNDv8T8Mzs3A4iSs6cxMDvHoHkyj9Eoj%2FHOY8d7XxsLzSqU5SDHiFsL771Qvxow9bw%2BeXKPSJ0yA%3D%3D";
-        String pageNo = "1";	//페이지 번호
-        String numOfRows = "1";	//한 페이지 결과 수
-        String dataType = "JSON";	//데이터 타입
-        String CURRENT_DATE = "20230916";	//조회하고싶은 날짜
-        String HOUR = "24";	//조회하고 싶은 날짜의 시간 날짜
-        String COURSE_ID = String.valueOf(courseId);	//관광 코스ID
+        String serviceKey = "ppbyLar1zzLOwFF8ifh8Xs05l%2FNQn6gLdVqzPbg%2BPkp%2FwulI2V%2FlN4ReRHok%2FrprkInKVhDh%2FYizMQPQZNJ3wg%3D%3D";
+        String pageNo = "1";
+        String numOfRows = "1";
+        String dataType = "XML"; // 데이터 타입을 XML로 설정
+        String CURRENT_DATE = "20230916";
+        String HOUR = "24";
+        String COURSE_ID = String.valueOf(courseId);
 
         boolean check = false;
         while (true) {
             StringBuilder urlBuilder = new StringBuilder(apiUrl);
-            urlBuilder.append("?" + URLEncoder.encode("ServiceKey","UTF-8") + "="+serviceKey);
-            urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("CURRENT_DATE","UTF-8") + "=" + URLEncoder.encode(CURRENT_DATE, "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("HOUR","UTF-8") + "=" + URLEncoder.encode(HOUR, "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("COURSE_ID","UTF-8") + "=" + URLEncoder.encode(COURSE_ID, "UTF-8"));
+            urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + serviceKey);
+            urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(numOfRows, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("CURRENT_DATE", "UTF-8") + "=" + URLEncoder.encode(CURRENT_DATE, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("HOUR", "UTF-8") + "=" + URLEncoder.encode(HOUR, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("COURSE_ID", "UTF-8") + "=" + URLEncoder.encode(COURSE_ID, "UTF-8"));
 
-            /*
-             * GET방식으로 전송해서 파라미터 받아오기
-             */
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-type", "application/json");
-            BufferedReader br;
-            if(200 <= conn.getResponseCode() && conn.getResponseCode() <= 300) {
-                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            } else {
-                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-            }
 
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            br.close();
-            conn.disconnect();
-            String result= sb.toString();
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(conn.getInputStream()); // 수정된 부분
+            doc.getDocumentElement().normalize();
 
             if (!check) {
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObject = (JSONObject) parser.parse(result);
-                JSONObject response = (JSONObject) jsonObject.get("response");
-                JSONObject body = (JSONObject) response.get("body");
-
-                numOfRows = String.valueOf(body.get("totalCount"));
+                NodeList nList = doc.getElementsByTagName("item");
+                numOfRows = String.valueOf(nList.getLength());
                 check = true;
                 continue;
             } else {
-                return result;
+                return doc;
             }
         }
     }
@@ -86,12 +76,9 @@ public class WeatherApi {
         try {
             Timer t1 = new Timer();
             t1.start();
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(getWeatherDataToJsonString(courseId));
-            JSONObject response = (JSONObject) jsonObject.get("response");
-            JSONObject body = (JSONObject) response.get("body");
-            JSONObject items = (JSONObject) body.get("items");
-            JSONArray itemArray = (JSONArray) items.get("item");
+
+            Document doc = getWeatherDataToXml(courseId);
+            NodeList nodeList = doc.getElementsByTagName("item");
 
             t1.end();
             t1.printTime();
@@ -112,43 +99,47 @@ public class WeatherApi {
 
             int cnt = 0;
             String tmTemp = "";
-            for (int i = 0; i < (Long)body.get("totalCount"); i++) {
-                // 여러 개의 아이템 중에서 하나를 선택
-                JSONObject firstItem = (JSONObject) itemArray.get(i);
-                int courseIndex = map.get((Long) firstItem.get("spotAreaId"));
-                String tm = (String) firstItem.get("tm");
-                if (!check[courseIndex] && !tm.equals(tmTemp)) {
+            for (int temp = 0; temp < nodeList.getLength(); temp++) {
+                Node nNode = nodeList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
 
-                    check[courseIndex] = true;
-                    cnt++;
+                    Long spotAreaId = Long.parseLong(eElement.getElementsByTagName("spotAreaId").item(0).getTextContent());
+                    if (map.containsKey(spotAreaId)) {
+                        int courseIndex = map.get(spotAreaId);
+                        String tm = eElement.getElementsByTagName("tm").item(0).getTextContent();
+                        if (!check[courseIndex] && !tm.equals(tmTemp)) {
 
-                    // JSON 데이터에서 필드 추출
-                    tm = (String) firstItem.get("tm");
-                    String thema = (String) firstItem.get("thema");
-                    String course_id = (String) firstItem.get("courseId");
-                    String courseAreaId = (String) firstItem.get("courseAreaId");
-                    String courseAreaName = (String) firstItem.get("courseAreaName");
-                    String courseName = (String) firstItem.get("courseName");
-                    Long spotAreaId = (Long) firstItem.get("spotAreaId");
-                    String spotAreaName = (String) firstItem.get("spotAreaName");
-                    String spotName = (String) firstItem.get("spotName");
-                    Long th3 = (Long) firstItem.get("th3");
-                    Long wd = (Long) firstItem.get("wd");
-                    Long ws = (Long) firstItem.get("ws");
-                    Long sky = (Long) firstItem.get("sky");
-                    Long rhm = (Long) firstItem.get("rhm");
-                    Long pop = (Long) firstItem.get("pop");
+                            check[courseIndex] = true;
+                            cnt++;
 
-                    // CourseWeather 객체 생성
-                    CourseWeather courseWeather = new CourseWeather(tm, thema, course_id, courseAreaId, courseAreaName,
-                            courseName, spotAreaId, spotAreaName, spotName, th3, wd, ws, sky, rhm, pop);
+                            // XML 데이터에서 필드 추출
+                            String thema = eElement.getElementsByTagName("thema").item(0).getTextContent();
+                            String course_id = eElement.getElementsByTagName("courseId").item(0).getTextContent();
+                            String courseAreaId = eElement.getElementsByTagName("courseAreaId").item(0).getTextContent();
+                            String courseAreaName = eElement.getElementsByTagName("courseAreaName").item(0).getTextContent();
+                            String courseName = eElement.getElementsByTagName("courseName").item(0).getTextContent();
+                            String spotAreaName = eElement.getElementsByTagName("spotAreaName").item(0).getTextContent();
+                            String spotName = eElement.getElementsByTagName("spotName").item(0).getTextContent();
+                            Long th3 = Long.parseLong(eElement.getElementsByTagName("th3").item(0).getTextContent());
+                            Long wd = Long.parseLong(eElement.getElementsByTagName("wd").item(0).getTextContent());
+                            Long ws = Long.parseLong(eElement.getElementsByTagName("ws").item(0).getTextContent());
+                            Long sky = Long.parseLong(eElement.getElementsByTagName("sky").item(0).getTextContent());
+                            Long rhm = Long.parseLong(eElement.getElementsByTagName("rhm").item(0).getTextContent());
+                            Long pop = Long.parseLong(eElement.getElementsByTagName("pop").item(0).getTextContent());
 
-                    arr[courseIndex][arrCol-1] = courseWeather;
-                    if (cnt == list.size()) {
-                        arrCol--;
-                        cnt = 0;
-                        Arrays.fill(check, false);
-                        tmTemp = tm;
+                            // CourseWeather 객체 생성
+                            CourseWeather courseWeather = new CourseWeather(tm, thema, course_id, courseAreaId, courseAreaName,
+                                    courseName, spotAreaId, spotAreaName, spotName, th3, wd, ws, sky, rhm, pop);
+
+                            arr[courseIndex][arrCol - 1] = courseWeather;
+                            if (cnt == list.size()) {
+                                arrCol--;
+                                cnt = 0;
+                                Arrays.fill(check, false);
+                                tmTemp = tm;
+                            }
+                        }
                     }
                 }
             }

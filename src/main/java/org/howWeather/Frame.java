@@ -12,25 +12,26 @@ public class Frame {
     public void initGUI() {
         JFrame frm = new JFrame("howWeather");                // 프레임 생성
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     // 프레임의 X 클릭 시 종료.
-        frameCnt = frm.getContentPane();                     // JFrame 안쪽 영역.
+      
+        Container c = frm.getContentPane();                     // JFrame 안쪽 영역.
 
-        JPanel searchPan = new JPanel();
-        searchFld = new JTextField(10);
-        JButton searchBtn = new JButton("검색");                      // JFrame 안쪽 영역에 들어갈 클릭 버튼
-        JButton filterBtn = new JButton("필터");
-        searchPan.add(filterBtn);
-        searchPan.add(searchFld);
-        searchPan.add(searchBtn);
-        searchBtn.addActionListener(new Search(this));              // pan에 생성한 버튼(searchBtn) 클릭 시 처리하는 이벤트 핸들러.
-        filterBtn.addActionListener(new Filter(this));
 
-        mapLbl.setPreferredSize(new Dimension(600,660));
-        mapLbl.setText("MAP");
+        imageLabel = new JLabel("지도보기");                    // JFrame 안쪽 영역 상단에 들어갈 지도보기
+        JPanel pan = new JPanel();
+        JLabel addressLbl = new JLabel("코스 번호 입력");             // JFrame 안쪽 영역 상단에 들어갈 주소입력
+        address = new JTextField(50);
+        JButton btn = new JButton("클릭");                      // JFrame 안쪽 영역에 들어갈 클릭 버튼
+        pan.add(addressLbl);
+        pan.add(address);
+        pan.add(btn);
+        btn.addActionListener(new NaverMap2(this));              // pan에 생성한 버튼(btn) 클릭 시 처리하는 이벤트 핸들러.
 
-        frameCnt.add(BorderLayout.WEST, mapLbl);                          // 센터 mapLbl 세팅
-        frameCnt.add(BorderLayout.EAST, searchPan);                         // 상단 searchPan 세팅
 
-        frm.setSize(1000, 660);
+        c.add(BorderLayout.NORTH, pan);                         // 상단 pan 세팅
+        c.add(BorderLayout.CENTER, imageLabel);                 // 센터 imageLabel 세팅
+        // c.add(BorderLayout.SOUTH, pan1);                        // 하단 pan1 세팅
+
+        frm.setSize(730, 660);
         frm.setVisible(true);
 
     }
