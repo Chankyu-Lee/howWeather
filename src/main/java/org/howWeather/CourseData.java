@@ -1,6 +1,10 @@
 package org.howWeather;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class CourseData {
+
     private String themeCategory;
     private long courseId;
     private long tourismId;
@@ -15,7 +19,6 @@ public class CourseData {
 
     public CourseData(String themeCategory, long courseId, long tourismId, long regionId, String tourismName,
                       String longitude, String latitude, long courseOrder, long travelTime, String indoorType, String themeName) {
-        super();
         this.themeCategory = themeCategory;
         this.courseId = courseId;
         this.tourismId = tourismId;
@@ -30,7 +33,6 @@ public class CourseData {
     }
 
     public CourseData() {
-
     }
 
     public String getThemeCategory() {
@@ -123,13 +125,35 @@ public class CourseData {
 
     @Override
     public String toString() {
-        return "themeCategory = " + themeCategory + "\ncourseId = " + courseId + "\ntourismId = " + tourismId
-                + "\nregionId = " + regionId + "\ntourismName = " + tourismName + "\nlongitude = " + longitude
-                + "\nlatitude = " + latitude + "\ncourseOrder = " + courseOrder + "\ntravelTime = " + travelTime
-                + "\nindoorType = " + indoorType + "\nthemeName = " + themeName;
+        return "Theme Category: " + themeCategory + "\nCourse ID: " + courseId + "\nTourism ID: " + tourismId
+                + "\nRegion ID: " + regionId + "\nTourism Name: " + tourismName + "\nLongitude: " + longitude
+                + "\nLatitude: " + latitude + "\nCourse Order: " + courseOrder + "\nTravel Time: " + travelTime
+                + "\nIndoor Type: " + indoorType + "\nTheme Name: " + themeName;
     }
 
+    // XML로 변환하는 메서드
+    public Element toXmlElement(Document doc) {
+        Element courseDataElement = doc.createElement("CourseData");
 
+        courseDataElement.appendChild(createElement(doc, "ThemeCategory", themeCategory));
+        courseDataElement.appendChild(createElement(doc, "CourseId", String.valueOf(courseId)));
+        courseDataElement.appendChild(createElement(doc, "TourismId", String.valueOf(tourismId)));
+        courseDataElement.appendChild(createElement(doc, "RegionId", String.valueOf(regionId)));
+        courseDataElement.appendChild(createElement(doc, "TourismName", tourismName));
+        courseDataElement.appendChild(createElement(doc, "Longitude", longitude));
+        courseDataElement.appendChild(createElement(doc, "Latitude", latitude));
+        courseDataElement.appendChild(createElement(doc, "CourseOrder", String.valueOf(courseOrder)));
+        courseDataElement.appendChild(createElement(doc, "TravelTime", String.valueOf(travelTime)));
+        courseDataElement.appendChild(createElement(doc, "IndoorType", indoorType));
+        courseDataElement.appendChild(createElement(doc, "ThemeName", themeName));
 
+        return courseDataElement;
+    }
+
+    private Element createElement(Document doc, String tagName, String value) {
+        Element element = doc.createElement(tagName);
+        element.appendChild(doc.createTextNode(value));
+        return element;
+    }
 }
 
