@@ -1,23 +1,18 @@
 package org.howWeather;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.GridLayout;
+import java.awt.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class Frame {
-    JTextField address;
-    JLabel resAddress, resX, resY, jibunAddress;
-    JLabel imageLabel;
+    JTextField searchFld;
+    JLabel mapLbl = new JLabel();
+    Container frameCnt;
 
     public void initGUI() {
-        JFrame frm = new JFrame("Map View");                    // 프레임 생성
+        JFrame frm = new JFrame("howWeather");                // 프레임 생성
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     // 프레임의 X 클릭 시 종료.
+      
         Container c = frm.getContentPane();                     // JFrame 안쪽 영역.
 
 
