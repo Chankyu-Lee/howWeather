@@ -17,7 +17,7 @@ public class DataBase {
     private static final String csvFilePath = "기상청_관광코스별 관광지 상세날씨 조회 지점 정보_20200110.csv"; // CSV 파일 경로
     private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:orcl"; // Oracle 데이터베이스 주소
     private static final String username = "system"; // 여기에 사용자 이름 추가
-    private static final String password = "4208"; // 여기에 패스워드 추가
+    private static final String password = "1234"; // 여기에 패스워드 추가
     private static final String tableName = "course_data";
 
     static {
