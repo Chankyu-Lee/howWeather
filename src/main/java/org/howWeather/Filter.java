@@ -4,11 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.howWeather.DataBase.getCourseDataList;
 
 public class Filter extends JPanel implements ActionListener {
 
     Frame motherfrm;
+    FilterGroup themeGrp;
 
     public Filter(Frame frm){
         motherfrm = frm;
@@ -20,9 +24,10 @@ public class Filter extends JPanel implements ActionListener {
         setBackground(Color.white);
         setPreferredSize(new Dimension(300,750));
 
-        FilterGroup themeGrp = new FilterGroup("테마",new String[]{"문화/예술","쇼핑/놀이","자연/힐링","종교/역사/전통","체험/학습/산업","캠핑/스포츠"});
+        themeGrp = new FilterGroup("테마",new String[]{"문화/예술","쇼핑/놀이","자연/힐링","종교/역사/전통","체험/학습/산업","캠핑/스포츠"});
         FilterGroup locateGrp = new FilterGroup("지역",new String[]{"수도권","강원","충청","경상","전라"});
         FilterGroup weatherGrp = new FilterGroup("날씨",new String[]{"맑음","비","흐림"});
+
         add(locateGrp);
         add(themeGrp);
         add(weatherGrp);
@@ -33,6 +38,24 @@ public class Filter extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-
+        for (JCheckBox checkBox : themeGrp.checkBoxes) {
+            if (checkBox.isSelected()) {
+                printThemeCourse(checkBox.getText());
+            }
+        }
     }
+
+    private void printThemeCourse(String theme) {
+        // 여기서 CourseData 리스트는 DataBase 클래스에서 가져옵니다.
+        List<CourseData> courseList = DataBase.getAllCourseData();
+        for (CourseData courseData : courseList) {
+            if (courseData.getThemeName().equals(theme)) {
+                System.out.println(courseData.toString());
+            }
+        }
+    }
+
+
+
 }
+
