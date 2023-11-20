@@ -34,4 +34,10 @@ public class FilterGroup extends JPanel{
         }
         this.add(checkBoxPnl);
     }
+
+    public void uncheckAll(){
+        for (JCheckBox checkBox: checkBoxes){
+            checkBox.setSelected(false);
+        }
+    }
 }

@@ -44,6 +44,8 @@ public class DataBase {
 
     public static void createTable() {
         try {
+            //DriverManager.registerDriver(new OracleDriver());
+
             if (!tableExists()) {
                 // 테이블 생성
                 Statement stmt = conn.createStatement();

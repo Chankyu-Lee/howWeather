@@ -28,7 +28,8 @@ public class Search extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e){
             if(!(searchFld.getText().isEmpty())){
-                NaverMap2.map_service(motherFrm, Long.parseLong(searchFld.getText()));
+                motherFrm.filter.unckeckAll();
+                //NaverMap2.map_service(motherFrm, Long.parseLong(searchFld.getText()));
             }
         }
     }
