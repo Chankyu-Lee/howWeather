@@ -2,6 +2,7 @@ package org.howWeather;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,9 +16,9 @@ public class DataBase {
     private static Connection conn;
 
     private static final String csvFilePath = "기상청_관광코스별 관광지 상세날씨 조회 지점 정보_20200110.csv"; // CSV 파일 경로
-    private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:orcl"; // Oracle 데이터베이스 주소
-    private static final String username = "system"; // 여기에 사용자 이름 추가
-    private static final String password = "4208"; // 여기에 패스워드 추가
+    private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:xe"; // Oracle 데이터베이스 주소
+    private static final String username = "lck0722"; // 여기에 사용자 이름 추가
+    private static final String password = "1234"; // 여기에 패스워드 추가
     private static final String tableName = "course_data";
 
     static {
@@ -137,6 +138,39 @@ public class DataBase {
         }
 
         return list;
+    }
+
+    public static void writeToExcelFile(String tableName, String fileName) {
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName);
+            FileWriter writer = new FileWriter(fileName + ".csv"); {
+
+                // Write header
+                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                    writer.append(resultSet.getMetaData().getColumnName(i));
+                    if (i < resultSet.getMetaData().getColumnCount()) {
+                        writer.append(",");
+                    }
+                }
+                writer.append("\n");
+
+                // Write data
+                while (resultSet.next()) {
+                    for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                        writer.append(resultSet.getString(i));
+                        if (i < resultSet.getMetaData().getColumnCount()) {
+                            writer.append(",");
+                        }
+                    }
+                    writer.append("\n");
+                }
+
+                System.out.println("CSV file has been generated successfully!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
