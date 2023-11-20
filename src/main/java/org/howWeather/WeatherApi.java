@@ -3,6 +3,8 @@ package org.howWeather;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ public class WeatherApi {
         String pageNo = "1";
         String numOfRows = "1";
         String dataType = "XML"; // 데이터 타입을 XML로 설정
-        String CURRENT_DATE = "20230916";
+        String CURRENT_DATE = getDate();
         String HOUR = "24";
         String COURSE_ID = String.valueOf(courseId);
 
@@ -56,14 +58,25 @@ public class WeatherApi {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
+            int responseCode = conn.getResponseCode();
+            System.out.println("responseCode=" + conn.getResponseCode());
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                System.out.println("HTTP 응답 코드: " + responseCode);
+                // 예외 처리 또는 다른 로직을 추가할 수 있습니다.
+                return null;  // 또는 throw new RuntimeException("API 호출 실패: " + responseCode);
+            }
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(conn.getInputStream()); // 수정된 부분
             doc.getDocumentElement().normalize();
 
             if (!check) {
-                NodeList nList = doc.getElementsByTagName("item");
-                numOfRows = String.valueOf(nList.getLength());
+                // body 요소 선택
+                Element bodyElement = (Element) doc.getElementsByTagName("body").item(0);
+                // totalCount 요소 선택
+                Element totalCountElement = (Element) bodyElement.getElementsByTagName("totalCount").item(0);
+                numOfRows = totalCountElement.getTextContent();
                 check = true;
                 continue;
             } else {
@@ -97,6 +110,7 @@ public class WeatherApi {
             int arrCol = 16;
             CourseWeather[][] arr = new CourseWeather[list.size()][arrCol];
 
+            int col = 0;
             int cnt = 0;
             String tmTemp = "";
             for (int temp = 0; temp < nodeList.getLength(); temp++) {
@@ -132,12 +146,16 @@ public class WeatherApi {
                             CourseWeather courseWeather = new CourseWeather(tm, thema, course_id, courseAreaId, courseAreaName,
                                     courseName, spotAreaId, spotAreaName, spotName, th3, wd, ws, sky, rhm, pop);
 
-                            arr[courseIndex][arrCol - 1] = courseWeather;
+                            arr[courseIndex][col] = courseWeather;
                             if (cnt == list.size()) {
-                                arrCol--;
+                                col++;
                                 cnt = 0;
                                 Arrays.fill(check, false);
                                 tmTemp = tm;
+
+                                if (col == arrCol) {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -147,11 +165,42 @@ public class WeatherApi {
             t1.end();
             t1.printTime();
 
-            return arr;
+            return reverseArray(arr);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+    public static String getDate() {
+        // 현재 날짜 가져오기
+        LocalDate currentDate = LocalDate.now();
+
+        // 원하는 날짜 형식 정의
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // 현재 날짜를 지정된 형식으로 변환
+        String formattedDate = currentDate.format(formatter);
+
+        return formattedDate;
+    }
+
+    // 2차원 배열을 뒤집는 메서드
+    private static CourseWeather[][] reverseArray(CourseWeather[][] array) {
+        int rows = array.length;
+        int cols = array[0].length;
+
+        CourseWeather[][] reversedArray = new CourseWeather[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                reversedArray[i][j] = array[i][cols - 1 - j];
+            }
+        }
+
+        return reversedArray;
+    }
 }
+
+
 
