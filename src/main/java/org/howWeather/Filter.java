@@ -4,48 +4,58 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.howWeather.DataBase.getCourseDataList;
 
-public class Filter implements ActionListener {
-    Frame filter;
+public class Filter extends JPanel implements ActionListener {
 
-    public Filter(Frame filter){ this.filter = filter; }
+    Frame motherfrm;
+    FilterGroup themeGrp;
 
-    public JCheckBox mkCheckBox(JPanel p, String s){
-        JCheckBox c = new JCheckBox(s);
-        c.setBackground(Color.white);
-
-        p.add(c);
-
-        return c;
+    public Filter(Frame frm){
+        motherfrm = frm;
+        VisibleFilter();
     }
-
-    public void actionPerformed(ActionEvent e){ VisibleFilter(); }
 
     public void VisibleFilter(){
-        JPanel filterPan = new JPanel();
-        filterPan.setLayout(new BoxLayout(filterPan, BoxLayout.Y_AXIS));
-        filterPan.setBackground(Color.white);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.white);
+        setPreferredSize(new Dimension(300,750));
 
-        JPanel themeChecks = new JPanel();
-        themeChecks.setBackground(Color.white);
-        themeChecks.setLayout(new FlowLayout(FlowLayout.LEFT));
+        themeGrp = new FilterGroup("테마",new String[]{"문화/예술","쇼핑/놀이","자연/힐링","종교/역사/전통","체험/학습/산업","캠핑/스포츠"});
+        FilterGroup locateGrp = new FilterGroup("지역",new String[]{"수도권","강원","충청","경상","전라"});
+        FilterGroup weatherGrp = new FilterGroup("날씨",new String[]{"맑음","비","흐림"});
 
-        JCheckBox themeCheck_culture = mkCheckBox(themeChecks,"문화/예술");
-        JCheckBox themeCheck_shopping = mkCheckBox(themeChecks,"쇼핑/놀이");
-        JCheckBox themeCheck_nature = mkCheckBox(themeChecks,"자연/힐링");
-        JCheckBox themeCheck_tradition = mkCheckBox(themeChecks,"종교/역사/전통");
-        JCheckBox themeCheck_practice = mkCheckBox(themeChecks,"체험/학습/산업");
-        JCheckBox themeCheck_camping = mkCheckBox(themeChecks,"캠핑/스포츠");
+        add(locateGrp);
+        add(themeGrp);
+        add(weatherGrp);
 
-        //JButton closeBtn = new JButton("X");
-        //filterPan.add(closeBtn);
-        filterPan.add(new JLabel("테마"));
-        filterPan.add(themeChecks);
-
-        filter.frameCnt.add(BorderLayout.CENTER,filterPan);
-
-        filter.frameCnt.validate();
-        filter.frameCnt.repaint();
+        JButton applyBtn = new JButton("필터 적용");
+        applyBtn.addActionListener(this);
+        add(applyBtn);
     }
+
+    public void actionPerformed(ActionEvent e){
+        for (JCheckBox checkBox : themeGrp.checkBoxes) {
+            if (checkBox.isSelected()) {
+                printThemeCourse(checkBox.getText());
+            }
+        }
+    }
+
+    private void printThemeCourse(String theme) {
+        // 여기서 CourseData 리스트는 DataBase 클래스에서 가져옵니다.
+        List<CourseData> courseList = DataBase.getAllCourseData();
+        for (CourseData courseData : courseList) {
+            if (courseData.getThemeName().equals(theme)) {
+                System.out.println(courseData.toString());
+            }
+        }
+    }
+
+
+
 }
+

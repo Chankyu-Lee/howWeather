@@ -110,6 +110,37 @@ public class DataBase {
     }
 
 
+    public static List<CourseData> getAllCourseData() {
+        List<CourseData> list = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM course_data ORDER BY COURSE_ORDER ASC");
+            while (rs.next()) {
+                CourseData cd = new CourseData();
+
+                cd.setThemeCategory(rs.getString("theme_category"));
+                cd.setCourseId(rs.getLong("course_id"));
+                cd.setTourismId(rs.getLong("tourism_id"));
+                cd.setRegionId(rs.getLong("region_id"));
+                cd.setTourismName(rs.getString("tourism_name"));
+                cd.setLongitude(rs.getString("longitude"));
+                cd.setLatitude(rs.getString("latitude"));
+                cd.setCourseOrder(rs.getLong("course_order"));
+                cd.setTravelTime(rs.getLong("travel_time"));
+                cd.setIndoorType(rs.getString("indoor_type"));
+                cd.setThemeName(rs.getString("theme_name"));
+
+                list.add(cd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
     public static List<CourseData> getCourseDataList(long courseId) {
         List<CourseData> list = new ArrayList<>();
 

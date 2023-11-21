@@ -34,6 +34,7 @@ public class WeatherApi {
     }
 
     private static Document getWeatherDataToXml(long courseId) throws Exception {
+
         String apiUrl = "http://apis.data.go.kr/1360000/TourStnInfoService1/getTourStnVilageFcst1";
         String serviceKey = "ppbyLar1zzLOwFF8ifh8Xs05l%2FNQn6gLdVqzPbg%2BPkp%2FwulI2V%2FlN4ReRHok%2FrprkInKVhDh%2FYizMQPQZNJ3wg%3D%3D";
         String pageNo = "1";
@@ -201,6 +202,3 @@ public class WeatherApi {
         return reversedArray;
     }
 }
-
-
-
