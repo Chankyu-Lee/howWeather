@@ -97,8 +97,7 @@ public class DataBase {
                     for (int i = 0; i < 11; i++) {
                         if (i == 0 || i == 4 || i == 5 || i == 6 || i == 9 || i == 10) {
                             pstmt.setString(i + 1, data[i]);
-                        }
-                        else {
+                        } else {
                             pstmt.setLong(i + 1, Long.parseLong(data[i]));
                         }
                     }
@@ -176,7 +175,8 @@ public class DataBase {
         try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName);
-            FileWriter writer = new FileWriter(fileName + ".csv"); {
+            FileWriter writer = new FileWriter(fileName + ".csv");
+            {
 
                 // Write header
                 for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
@@ -203,6 +203,40 @@ public class DataBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+    }
+
+    public static List<CourseData> getCourseDataByRegion(String regionCode) {
+        List<CourseData> list = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            // region_id의 앞 두 자리가 지역 코드와 일치하는 데이터 조회
+            ResultSet rs = stmt.executeQuery("SELECT * FROM course_data WHERE substr(region_id, 1, 2) = '" + regionCode + "' ORDER BY COURSE_ORDER ASC");
+            while (rs.next()) {
+                CourseData cd = new CourseData();
+
+                cd.setThemeCategory(rs.getString("theme_category"));
+                cd.setCourseId(rs.getLong("course_id"));
+                cd.setTourismId(rs.getLong("tourism_id"));
+                cd.setRegionId(rs.getLong("region_id"));
+                cd.setTourismName(rs.getString("tourism_name"));
+                cd.setLongitude(rs.getString("longitude"));
+                cd.setLatitude(rs.getString("latitude"));
+                cd.setCourseOrder(rs.getLong("course_order"));
+                cd.setTravelTime(rs.getLong("travel_time"));
+                cd.setIndoorType(rs.getString("indoor_type"));
+                cd.setThemeName(rs.getString("theme_name"));
+
+
+                list.add(cd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return list;
     }
 }
-
