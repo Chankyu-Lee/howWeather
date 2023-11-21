@@ -19,8 +19,9 @@ public class NaverMap2{
             URL url = new URL(URL_STATICMAP);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "5umm05laoy");
-            con.setRequestProperty("X-NCP-APIGW-API-KEY", "CAWHT8yo1vDh8jod76x468PFiQbL1bBIweNA6Qxk");
+            con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "qfcvq72lp0");
+            con.setRequestProperty("X-NCP-APIGW-API-KEY", "TEYuTjfh9ZM662dTHSLK3VALxMZK9YBQJYYa2Vbe");
+
 
             int responseCode = con.getResponseCode();
             BufferedReader br;
