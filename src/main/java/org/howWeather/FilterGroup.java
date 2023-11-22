@@ -9,28 +9,30 @@ public class FilterGroup extends JPanel{
     JCheckBox[] checkBoxes;
 
     public FilterGroup(String groupname,String[] names){
-        this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        this.setBackground(Color.white);
-        this.checkBoxPnl.setBackground(Color.white);
-        this.checkBoxPnl.setLayout(new FlowLayout(FlowLayout.LEFT));
+        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        setBackground(Color.white);
+        checkBoxPnl.setBackground(Color.white);
+        checkBoxPnl.setLayout(new BoxLayout(checkBoxPnl,BoxLayout.Y_AXIS));
 
-        this.groupNameLbl = new JLabel(groupname);
-        this.checkBoxes = new JCheckBox[names.length];
+        groupNameLbl = new JLabel(groupname);
+        groupNameLbl.setFont(new Font("맑은 고딕",Font.BOLD,20));
+        checkBoxes = new JCheckBox[names.length];
         GenerateCheckBoxes(names);
         AddAll();
     }
 
     private void GenerateCheckBoxes(String[] names){
         for(int i = 0;i< names.length;i++){
-            this.checkBoxes[i] = new JCheckBox(names[i]);
-            this.checkBoxes[i].setBackground(Color.white);
+            checkBoxes[i] = new JCheckBox(names[i]);
+            checkBoxes[i].setBackground(Color.white);
+            checkBoxes[i].setFont(new Font("맑은 고딕",Font.PLAIN,15));
         }
     }
 
     private void AddAll(){
         this.add(groupNameLbl);
         for (JCheckBox checkBox : checkBoxes) {
-            this.checkBoxPnl.add(checkBox);
+            checkBoxPnl.add(checkBox);
         }
         this.add(checkBoxPnl);
     }
