@@ -156,4 +156,3 @@ public class CourseData {
         return element;
     }
 }
-
