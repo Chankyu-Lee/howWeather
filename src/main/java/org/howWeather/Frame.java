@@ -18,9 +18,14 @@ public class Frame extends JFrame {
         NaverMap2.setBasicMap(mapLbl);
 
         frameCnt.add(BorderLayout.WEST,filter);
-        frameCnt.add(BorderLayout.CENTER, search);                         // 상단 searchPan 세팅
-        frameCnt.add(BorderLayout.EAST, mapLbl);                          // 센터 mapLbl 세팅
+        frameCnt.add(BorderLayout.CENTER, search);
+        frameCnt.add(BorderLayout.EAST, mapLbl);
 
         setVisible(true);
+    }
+
+    public void refresh(){
+        revalidate();
+        repaint();
     }
 }
