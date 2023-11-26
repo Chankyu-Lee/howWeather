@@ -8,10 +8,10 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
-public class NaverMap2{
+public class NaverMap2 {
 
     //기본 상태의 맵 이미지를 설정합니다
-    public static void setBasicMap(JLabel label){
+    public static void setBasicMap(JLabel label) {
 
         try {
             String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?w=700&h=750&center=127.1054221,36.3591614&level=6";
@@ -43,7 +43,7 @@ public class NaverMap2{
                 System.out.println(responseCode);
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -52,6 +52,11 @@ public class NaverMap2{
     public static void map_service(Frame naverMap, long courseId) {
         List<CourseData> list = DataBase.getCourseDataList(courseId);
         CourseWeather[][] arr = WeatherApi.getCourseWeatherDoubleArr(courseId);
+
+        for (CourseData cd : list) {
+            System.out.println(cd);
+            System.out.println();
+        }
 
         if (arr != null && arr.length > 0 && arr[0] != null && arr[0].length > 0) {
             try {
@@ -97,3 +102,4 @@ public class NaverMap2{
         }
     }
 }
+
