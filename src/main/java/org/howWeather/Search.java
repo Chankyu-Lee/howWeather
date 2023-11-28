@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Search extends JPanel implements ActionListener {
@@ -60,8 +62,10 @@ public class Search extends JPanel implements ActionListener {
     }
 
     public void clearinfoPnl(){
-        remove(infoPnl);
-        infoPnl = null;
+        if(infoPnl != null){
+            remove(infoPnl);
+            infoPnl = null;
+        }
         motherFrm.refresh();
         if(!(infoPnlStack.empty())){
             drawInfoPnl();
@@ -72,12 +76,14 @@ public class Search extends JPanel implements ActionListener {
         // 필터 초기화
         motherFrm.filter.unckeckAll();
 
+        searchFld.setText("");
+
         // 결과 초기화
         infoPnlStack.clear();
         clearinfoPnl();
 
         // 지도 초기화
-        NaverMap2.setBasicMap(motherFrm.mapLbl);
+        NaverMap2.setBasicMap();
     }
 
     @Override
@@ -86,9 +92,12 @@ public class Search extends JPanel implements ActionListener {
         if(!(text.isEmpty())){
             motherFrm.filter.unckeckAll();
             infoPnlStack.clear();
-            NaverMap2.map_service(motherFrm, Long.parseLong(text));
-            AttractionInfo attractionInfo = new AttractionInfo(this,DataBase.getCourseDataList(Long.parseLong(text)).get(1));
-            pushinfoPnl(attractionInfo);
+            List<CourseData> list = DataBase.getCourseDataList(Long.parseLong(text));
+            NaverMap2.setCourseMap(list);
+            List<List<CourseData>> list2 = new ArrayList<List<CourseData>>();
+            list2.add(list);
+            CourseInfo courseInfo = new CourseInfo(this,list2);
+            pushinfoPnl(courseInfo);
         }
     }
 
