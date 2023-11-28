@@ -9,54 +9,56 @@ import java.util.List;
 public class CourseInfo extends JPanel implements ActionListener {
     private Search motherPnl;
     private JLabel coursenameLbl = new JLabel();
-    private JLabel currentorder = new JLabel();
+    private JLabel currentorderLbl = new JLabel();
     private List<InfoButton> buttons = new ArrayList<>();
 
     private int currentcourse = 1;
-    private List<List<CourseData>> something;
-
+    private List<List<CourseData>> courseList;
     private JButton nextBtn = new JButton(">");
     private JButton prevBtn = new JButton("<");
     private JPanel coursePnl = new JPanel();
 
+    private CourseWeather[][] weatherData;
 
-    CourseInfo(Search motherPnl, List<List <CourseData>> list){
+    CourseInfo(Search motherPnl, List<List<CourseData>> list){
         motherPnl.pushinfoPnl(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         coursePnl.setLayout((new BoxLayout(coursePnl, BoxLayout.Y_AXIS)));
-        something = list;
+        courseList = list;
         this.motherPnl = motherPnl;
         nextBtn.addActionListener(this);
         prevBtn.addActionListener(this);
+        getCourseWeatherData();
         visibleCourseInfo();
     }
 
     private void visibleCourseInfo(){
         setCoursenameLbl();
-        setCurrentorder();
+        setcurrentorderLbl();
         add(coursenameLbl);
         addCourse();
         add(coursePnl);
 
         JPanel downside = new JPanel();
         downside.add(prevBtn);
-        downside.add(currentorder);
+        downside.add(currentorderLbl);
         downside.add(nextBtn);
         add(downside);
+        setMap();
     }
 
     private void setCoursenameLbl(){
-        coursenameLbl.setText("Course " + something.get(currentcourse).get(0).getCourseId());
+        coursenameLbl.setText("Course " + courseList.get(currentcourse-1).get(0).getCourseId());
     }
 
-    private void setCurrentorder(){
-        currentorder.setText(currentcourse + " / " + something.size());
+    private void setcurrentorderLbl(){
+        currentorderLbl.setText(currentcourse + " / " + courseList.size());
     }
 
     private void addCourse(){
-        List<CourseData> list = something.get(currentcourse);
+        List<CourseData> list = courseList.get(currentcourse-1);
         for(CourseData coursedata : list){
-            buttons.add(new InfoButton(coursedata.getTourismName(), coursedata.getCourseId()));
+            buttons.add(new InfoButton(coursedata));
         }
         for(InfoButton btn : buttons) {
             coursePnl.add(btn);
@@ -65,16 +67,26 @@ public class CourseInfo extends JPanel implements ActionListener {
 
     private void changeCourse(){
         setCoursenameLbl();
-        setCurrentorder();
+        setcurrentorderLbl();
         coursePnl.removeAll();
         buttons.clear();
         addCourse();
+        setMap();
+        getCourseWeatherData();
+    }
+
+    private void setMap(){
+        NaverMap2.setCourseMap(courseList.get(currentcourse-1));
+    }
+
+    private void getCourseWeatherData(){
+        weatherData = WeatherApi.getCourseWeatherDoubleArr(courseList.get(currentcourse-1).get(0).getCourseId());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == nextBtn){
-            if(currentcourse < something.size()) {
+            if(currentcourse < courseList.size()) {
                 currentcourse++;
                 changeCourse();
             }
@@ -87,24 +99,19 @@ public class CourseInfo extends JPanel implements ActionListener {
     }
 
     class InfoButton extends JButton implements ActionListener {
-        private long courseId;
+        private long order;
 
-        public InfoButton(String text, long courseId) {
-            super(text);
-            this.courseId = courseId;
+        public InfoButton(CourseData coursedata) {
+            super(coursedata.getTourismName());
+            this.order = coursedata.getCourseOrder();
             addActionListener(this);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() instanceof InfoButton) {
-                InfoButton sourceButton = (InfoButton) e.getSource();
-                NaverMap2.map_service((Frame) SwingUtilities.getWindowAncestor(sourceButton), courseId);
-                AttractionInfo attractionInfo = new AttractionInfo(motherPnl, DataBase.getCourseDataList(courseId).get(0));
-                motherPnl.pushinfoPnl(attractionInfo);
-                motherPnl.drawInfoPnl();
-            }
-
+            AttractionInfo attractionInfo = new AttractionInfo(motherPnl, courseList.get(currentcourse-1).get((int)order-1), weatherData[(int)order-1]);
+            motherPnl.pushinfoPnl(attractionInfo);
+            motherPnl.drawInfoPnl();
         }
     }
 
