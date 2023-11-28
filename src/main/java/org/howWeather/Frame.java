@@ -1,6 +1,7 @@
 package org.howWeather;
 
 import java.awt.*;
+import java.io.File;
 import javax.swing.*;
 
 public class Frame extends JFrame {
@@ -15,7 +16,7 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     // 프레임의 X 클릭 시 종료.
         frameCnt = getContentPane();                     // JFrame 안쪽 영역.
 
-        NaverMap2.setBasicMap(mapLbl);
+        NaverMap2.setBasicMap();
 
         frameCnt.add(BorderLayout.WEST,filter);
         frameCnt.add(BorderLayout.CENTER, search);
