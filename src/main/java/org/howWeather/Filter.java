@@ -27,7 +27,6 @@ public class Filter extends JPanel implements ActionListener {
 
         locateGrp = new FilterGroup("지역",new String[]{"수도권","강원","충청","경상","전라"});
         themeGrp = new FilterGroup("테마",new String[]{"문화/예술","쇼핑/놀이","자연/힐링","종교/역사/전통","체험/학습/산업","캠핑/스포츠"});
-        weatherGrp = new FilterGroup("날씨",new String[]{"맑음","비","흐림"});
 
         add(locateGrp);
         add(themeGrp);
@@ -39,9 +38,9 @@ public class Filter extends JPanel implements ActionListener {
     }
 
     public void unckeckAll(){
-       locateGrp.uncheckAll();
-       themeGrp.uncheckAll();
-       weatherGrp.uncheckAll();
+        locateGrp.uncheckAll();
+        themeGrp.uncheckAll();
+        weatherGrp.uncheckAll();
     }
 
     private void printThemeCourse(String theme) {
