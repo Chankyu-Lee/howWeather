@@ -16,9 +16,9 @@ public class DataBase {
     private static Connection conn;
 
     private static final String csvFilePath = "기상청_관광코스별 관광지 상세날씨 조회 지점 정보_20200110.csv"; // CSV 파일 경로
-    private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:orcl"; // Oracle 데이터베이스 주소
+    private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:XE"; // Oracle 데이터베이스 주소
     private static final String username = "system"; // 여기에 사용자 이름 추가
-    private static final String password = "4208"; // 여기에 패스워드 추가
+    private static final String password = "pass"; // 여기에 패스워드 추가
     private static final String tableName = "course_data";
 
     static {
@@ -203,5 +203,38 @@ public class DataBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<CourseData> getCourseDataByRegion(String regionCode) {
+        List<CourseData> list = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            // region_id의 앞 두 자리가 지역 코드와 일치하는 데이터 조회
+            ResultSet rs = stmt.executeQuery("SELECT * FROM course_data WHERE substr(region_id, 1, 2) = '" + regionCode + "' ORDER BY COURSE_ORDER ASC");
+            while (rs.next()) {
+                CourseData cd = new CourseData();
+
+                cd.setThemeCategory(rs.getString("theme_category"));
+                cd.setCourseId(rs.getLong("course_id"));
+                cd.setTourismId(rs.getLong("tourism_id"));
+                cd.setRegionId(rs.getLong("region_id"));
+                cd.setTourismName(rs.getString("tourism_name"));
+                cd.setLongitude(rs.getString("longitude"));
+                cd.setLatitude(rs.getString("latitude"));
+                cd.setCourseOrder(rs.getLong("course_order"));
+                cd.setTravelTime(rs.getLong("travel_time"));
+                cd.setIndoorType(rs.getString("indoor_type"));
+                cd.setThemeName(rs.getString("theme_name"));
+
+
+                list.add(cd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return list;
     }
 }

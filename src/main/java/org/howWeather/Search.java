@@ -70,7 +70,7 @@ public class Search extends JPanel implements ActionListener {
 
     public void reset() {
         // 필터 초기화
-        motherFrm.filter.unckeckAll();
+        //motherFrm.filter.unckeckAll();
 
         // 결과 초기화
         infoPnlStack.clear();
@@ -84,7 +84,7 @@ public class Search extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e){
         String text = searchFld.getText();
         if(!(text.isEmpty())){
-            motherFrm.filter.unckeckAll();
+            //motherFrm.filter.unckeckAll();
             infoPnlStack.clear();
             NaverMap2.map_service(motherFrm, Long.parseLong(text));
             AttractionInfo attractionInfo = new AttractionInfo(this,DataBase.getCourseDataList(Long.parseLong(text)).get(1));
