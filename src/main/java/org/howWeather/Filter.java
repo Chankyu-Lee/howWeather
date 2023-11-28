@@ -39,7 +39,7 @@ public class Filter extends JPanel implements ActionListener {
         add(applyBtn);
     }
 
-    public void unckeckAll() {
+    public void uncheckAll() {
         locateGrp.uncheckAll();
         themeGrp.uncheckAll();
         weatherGrp.uncheckAll();
