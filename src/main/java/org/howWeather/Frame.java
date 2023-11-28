@@ -4,8 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Frame extends JFrame {
-    JTextField searchFld;
     static JLabel mapLbl = new JLabel();
+    Filter filter = new Filter(this);
+    Search search = new Search(this);
     Container frameCnt;
 
     public void initGUI() {
@@ -15,13 +16,16 @@ public class Frame extends JFrame {
         frameCnt = getContentPane();                     // JFrame 안쪽 영역.
 
         NaverMap2.setBasicMap(mapLbl);
-        Search search = new Search(this);
-        Filter filter = new Filter(this);
 
         frameCnt.add(BorderLayout.WEST,filter);
-        frameCnt.add(BorderLayout.CENTER, search);                         // 상단 searchPan 세팅
-        frameCnt.add(BorderLayout.EAST, mapLbl);                          // 센터 mapLbl 세팅
+        frameCnt.add(BorderLayout.CENTER, search);
+        frameCnt.add(BorderLayout.EAST, mapLbl);
 
         setVisible(true);
+    }
+
+    public void refresh(){
+        revalidate();
+        repaint();
     }
 }
