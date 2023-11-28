@@ -13,7 +13,6 @@ public class Filter extends JPanel implements ActionListener {
     Frame motherfrm;
     FilterGroup themeGrp;
     FilterGroup locateGrp;
-    FilterGroup weatherGrp;
 
     public Filter(Frame frm){
         motherfrm = frm;
@@ -30,7 +29,6 @@ public class Filter extends JPanel implements ActionListener {
 
         add(locateGrp);
         add(themeGrp);
-        add(weatherGrp);
 
         JButton applyBtn = new JButton("필터 적용");
         applyBtn.addActionListener(this);
@@ -38,9 +36,8 @@ public class Filter extends JPanel implements ActionListener {
     }
 
     public void unckeckAll(){
-        locateGrp.uncheckAll();
-        themeGrp.uncheckAll();
-        weatherGrp.uncheckAll();
+       locateGrp.uncheckAll();
+       themeGrp.uncheckAll();
     }
 
     private void printThemeCourse(String theme) {
