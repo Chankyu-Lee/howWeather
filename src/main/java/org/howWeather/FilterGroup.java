@@ -3,7 +3,7 @@ package org.howWeather;
 import javax.swing.*;
 import java.awt.*;
 
-public class FilterGroup extends JPanel{
+public class FilterGroup extends JPanel {
     JLabel groupNameLbl;
     JPanel checkBoxPnl = new JPanel();
     JCheckBox[] checkBoxes;
@@ -26,6 +26,7 @@ public class FilterGroup extends JPanel{
             checkBoxes[i] = new JCheckBox(names[i]);
             checkBoxes[i].setBackground(Color.white);
             checkBoxes[i].setFont(new Font("맑은 고딕",Font.PLAIN,15));
+
         }
     }
 
@@ -42,4 +43,5 @@ public class FilterGroup extends JPanel{
             checkBox.setSelected(false);
         }
     }
+
 }
