@@ -155,4 +155,9 @@ public class CourseData {
         element.appendChild(doc.createTextNode(value));
         return element;
     }
+
+    public String getLocation() {
+        return "Latitude: " + latitude + ", Longitude: " + longitude;
+    }
+
 }
