@@ -66,12 +66,14 @@ public class CourseInfo extends JPanel implements ActionListener {
     }
 
     private void changeCourse(){
+        System.out.println("Start");
         setCoursenameLbl();
         setcurrentorderLbl();
         coursePnl.removeAll();
         buttons.clear();
         addCourse();
         setMap();
+        System.out.println("End");
         getCourseWeatherData();
     }
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class NaverMap2 {
 
-    //기본 상태의 맵 이미지를 설정합니다
     public static void setBasicMap() {
         File file = new File("map/Basic.jpg");
 
@@ -21,7 +20,7 @@ public class NaverMap2 {
         }
 
         try {
-            String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?w=700&h=750&center=127.1054221,36.3591614&level=6";
+            String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?w=700&h=800&center=127.1054221,36.3591614&level=6";
 
             createMapImageFile(file, URL_STATICMAP);
 
@@ -40,8 +39,7 @@ public class NaverMap2 {
         }
 
         try {
-            String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?";
-            URL_STATICMAP += "&w=700&h=750";
+            String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?&w=700&h=800";
 
             for (CourseData cd : list) {
                 String pos = URLEncoder.encode(cd.getLongitude() + " " + cd.getLatitude(), "UTF-8");
@@ -69,8 +67,7 @@ public class NaverMap2 {
         }
 
         try {
-            String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?";
-            URL_STATICMAP += "&w=700&h=750";
+            String URL_STATICMAP = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster?&w=700&h=800";
 
             String pos = URLEncoder.encode(coursedata.getLongitude() + " " + coursedata.getLatitude(), "UTF-8");
             URL_STATICMAP += "&markers=type:t|size:mid|pos:" + pos + "|label:" + URLEncoder.encode(coursedata.getTourismName(), "UTF-8");

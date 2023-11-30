@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+// 438개의 코스가 있습니다
 public class DataBase {
     private static Connection conn;
 

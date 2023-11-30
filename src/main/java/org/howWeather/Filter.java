@@ -11,11 +11,9 @@ import static org.howWeather.DataBase.getCourseDataList;
 
 public class Filter extends JPanel implements ActionListener {
 
-    Frame motherfrm;
-    FilterGroup themeGrp;
-    FilterGroup locateGrp;
-    FilterGroup weatherGrp;
-
+    private Frame motherfrm;
+    private FilterGroup themeGrp;
+    private FilterGroup regionGrp;
     Map<String, String> regionCodeMap;
 
 
@@ -27,12 +25,23 @@ public class Filter extends JPanel implements ActionListener {
 
     private void initializeRegionCodeMap() {
         regionCodeMap = new HashMap<>();
-        regionCodeMap.put("서울 특별시", "11");
+        regionCodeMap.put("서울특별시", "11");
+        regionCodeMap.put("부산광역시", "26");
+        regionCodeMap.put("대구광역시", "27");
+        regionCodeMap.put("인천광역시", "28");
+        regionCodeMap.put("광주광역시", "29");
+        regionCodeMap.put("대전광역시", "30");
+        regionCodeMap.put("울산광역시", "31");
+        regionCodeMap.put("세종특별자치시", "36");
         regionCodeMap.put("경기도", "41");
-        regionCodeMap.put("강원도", "42");
-        regionCodeMap.put("충청도", "43");
-        regionCodeMap.put("전라도", "45");
-        regionCodeMap.put("경상도", "47");
+        regionCodeMap.put("강원특별자치도", "42");
+        regionCodeMap.put("충청북도", "43");
+        regionCodeMap.put("충청남도", "44");
+        regionCodeMap.put("전라북도", "45");
+        regionCodeMap.put("전라남도", "46");
+        regionCodeMap.put("경상북도", "47");
+        regionCodeMap.put("경상남도", "48");
+        regionCodeMap.put("제주특별자치도", "50");
     }
 
     public void VisibleFilter() {
@@ -41,12 +50,11 @@ public class Filter extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(300, 750));
 
         themeGrp = new FilterGroup("테마", new String[]{"문화/예술", "쇼핑/놀이", "자연/힐링", "종교/역사/전통", "체험/학습/산업", "캠핑/스포츠"});
-        locateGrp = new FilterGroup("지역", new String[]{"서울 특별시", "경기도", "강원도", "충청도", "경상도", "전라도"});
-        weatherGrp = new FilterGroup("날씨", new String[]{"맑음", "비", "흐림"});
+        regionGrp = new FilterGroup("지역", 
+                new String[]{"서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원특별자치도", "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"});
 
-        add(locateGrp);
+        add(regionGrp);
         add(themeGrp);
-        add(weatherGrp);
 
         JButton applyBtn = new JButton("필터 적용");
         applyBtn.addActionListener(this);
@@ -54,15 +62,14 @@ public class Filter extends JPanel implements ActionListener {
     }
 
     public void uncheckAll() {
-        locateGrp.uncheckAll();
+        regionGrp.uncheckAll();
         themeGrp.uncheckAll();
-        weatherGrp.uncheckAll();
     }
 
 
     public void actionPerformed(ActionEvent e) {
         boolean isThemeSelected = isAtLeastOneSelected(themeGrp);
-        boolean isRegionSelected = isAtLeastOneSelected(locateGrp);
+        boolean isRegionSelected = isAtLeastOneSelected(regionGrp);
 
         // '지역', '테마' 선택 여부에 따른 필터링
         if (isThemeSelected && isRegionSelected) {
@@ -87,7 +94,7 @@ public class Filter extends JPanel implements ActionListener {
 
     private void handleSelectedThemesAndRegions() {
         List<String> selectedThemes = getSelectedItems(themeGrp);
-        List<String> selectedRegions = getSelectedItems(locateGrp);
+        List<String> selectedRegions = getSelectedItems(regionGrp);
 
         for (String theme : selectedThemes) {
             for (String region : selectedRegions) {
@@ -107,12 +114,14 @@ public class Filter extends JPanel implements ActionListener {
     }
     private void printCourseByRegionAndTheme(String region, String theme) {
         List<CourseData> courseList = DataBase.getCourseDataByRegion(regionCodeMap.get(region));
-
+        List<List<CourseData>> list = new ArrayList<>();
         for (CourseData courseData : courseList) {
             if (courseData.getThemeName().equals(theme)) {
-                System.out.println(courseData.toString());
+                list.add(DataBase.getCourseDataList(courseData.getCourseId()));
             }
         }
+
+        motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, list));
     }
 
     private void handleSelectedThemes() {
@@ -122,7 +131,7 @@ public class Filter extends JPanel implements ActionListener {
 
 
     private void handleSelectedRegions() {
-        for (JCheckBox checkBox : locateGrp.checkBoxes) {
+        for (JCheckBox checkBox : regionGrp.checkBoxes) {
             if (checkBox.isSelected()) {
                 printRegionCourse(checkBox.getText());
             }
@@ -168,9 +177,12 @@ public class Filter extends JPanel implements ActionListener {
         String regionCode = regionCodeMap.get(region);
         if (regionCode != null) {
             List<CourseData> courseList = DataBase.getCourseDataByRegion(regionCode);
-            for (CourseData courseData : courseList) {
-                System.out.println(courseData.toString());
+            List<List<CourseData>> list = new ArrayList<>();
+            for(CourseData data: courseList){
+                list.add(DataBase.getCourseDataList(data.getCourseId()));
             }
+
+            motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, list));
         } else {
             System.out.println("해당 지역의 코드를 찾을 수 없습니다.");
         }

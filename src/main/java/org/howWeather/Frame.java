@@ -12,7 +12,7 @@ public class Frame extends JFrame {
 
     public void initGUI() {
         setTitle("howWeather");                // 프레임 생성
-        setSize(1400, 750);
+        setSize(1400, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     // 프레임의 X 클릭 시 종료.
         frameCnt = getContentPane();                     // JFrame 안쪽 영역.
 
