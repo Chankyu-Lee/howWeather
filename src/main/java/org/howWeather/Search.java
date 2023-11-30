@@ -74,7 +74,7 @@ public class Search extends JPanel implements ActionListener {
 
     public void reset() {
         // 필터 초기화
-        motherFrm.filter.unckeckAll();
+        motherFrm.filter.uncheckAll();
 
         searchFld.setText("");
 
@@ -90,7 +90,7 @@ public class Search extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e){
         String text = searchFld.getText();
         if(!(text.isEmpty())){
-            motherFrm.filter.unckeckAll();
+            motherFrm.filter.uncheckAll();
             infoPnlStack.clear();
             List<CourseData> list = DataBase.getCourseDataList(Long.parseLong(text));
             NaverMap2.setCourseMap(list);
