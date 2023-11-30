@@ -4,10 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static org.howWeather.DataBase.getCourseDataList;
 
@@ -118,12 +116,10 @@ public class Filter extends JPanel implements ActionListener {
     }
 
     private void handleSelectedThemes() {
-        for (JCheckBox checkBox : themeGrp.checkBoxes) {
-            if (checkBox.isSelected()) {
-                printThemeCourse(checkBox.getText());
-            }
-        }
+        List<String> selectedThemes = getSelectedItems(themeGrp);
+        printThemeCourse(selectedThemes);
     }
+
 
     private void handleSelectedRegions() {
         for (JCheckBox checkBox : locateGrp.checkBoxes) {
@@ -134,14 +130,38 @@ public class Filter extends JPanel implements ActionListener {
     }
 
 
-    private void printThemeCourse(String theme) {
-        // 여기서 CourseData 리스트는 DataBase 클래스에서 가져옵니다.
+    private void printThemeCourse(List<String> themes) {
         List<CourseData> courseList = DataBase.getAllCourseData();
+        List<List<CourseData>> resultList = new ArrayList<>();
+        Map<Long, List<CourseData>> courseDataMap = new HashMap<>();
+
         for (CourseData courseData : courseList) {
-            if (courseData.getThemeName().equals(theme)) {
-                System.out.println(courseData.toString());
+            Long ID = courseData.getCourseId();
+            if (!courseDataMap.containsKey(ID)) {
+                courseDataMap.put(ID, DataBase.getCourseDataList(ID));
             }
         }
+        resultList.addAll(courseDataMap.values());
+
+        for (Iterator<List<CourseData>> iterator = resultList.iterator(); iterator.hasNext(); ) {
+            List<CourseData> courseDataList = iterator.next();
+            boolean isFiltered = true;
+
+            for (String theme : themes) {
+                if (courseDataList.stream().anyMatch(courseData -> courseData.getThemeName().equals(theme))) {
+                    isFiltered = false;
+                } else {
+                    isFiltered = true;
+                    break;
+                }
+            }
+
+            if (isFiltered) {
+                iterator.remove();
+            }
+        }
+
+        motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, resultList));
     }
 
     private void printRegionCourse(String region) {
