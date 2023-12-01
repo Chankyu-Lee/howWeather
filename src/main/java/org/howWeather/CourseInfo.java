@@ -82,7 +82,25 @@ public class CourseInfo extends JPanel implements ActionListener {
     }
 
     private void getCourseWeatherData(){
-        weatherData = WeatherApi.getCourseWeatherDoubleArr(courseList.get(currentcourse-1).get(0).getCourseId());
+        //weatherData = WeatherApi.getCourseWeatherDoubleArr(courseList.get(currentcourse-1).get(0).getCourseId());
+
+        weatherData = new CourseWeather[2][7];
+
+        weatherData[0][0] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[0][1] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[0][2] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[0][3] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[0][4] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[0][5] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[0][6] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][0] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][1] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][2] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][3] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][4] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][5] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+        weatherData[1][6] = new CourseWeather("1", "dsa","3","3","3","3",3,"3","3",3,3,3,3,3,3);
+
     }
 
     @Override
