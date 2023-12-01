@@ -15,12 +15,13 @@ public class Frame extends JFrame {
         setSize(1400, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     // 프레임의 X 클릭 시 종료.
         frameCnt = getContentPane();                     // JFrame 안쪽 영역.
+        frameCnt.setLayout(new BoxLayout(frameCnt, BoxLayout.X_AXIS));
 
         NaverMap2.setBasicMap();
 
-        frameCnt.add(BorderLayout.WEST,filter);
-        frameCnt.add(BorderLayout.CENTER, search);
-        frameCnt.add(BorderLayout.EAST, mapLbl);
+        frameCnt.add(filter);
+        frameCnt.add(search);
+        frameCnt.add(mapLbl);
 
         setVisible(true);
     }

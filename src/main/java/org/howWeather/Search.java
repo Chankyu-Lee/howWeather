@@ -27,6 +27,7 @@ public class Search extends JPanel implements ActionListener {
                 reset();
             }
         });
+        setPreferredSize(new Dimension(250,800));
         VisibleSearch();
     }
 
@@ -86,6 +87,12 @@ public class Search extends JPanel implements ActionListener {
         NaverMap2.setBasicMap();
     }
 
+    public void noneMassage(){
+        JPanel nonePnl = new JPanel();
+        nonePnl.add(new JLabel("결과가 없습니다."));
+        pushinfoPnl(nonePnl);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e){
         String text = searchFld.getText();
@@ -93,11 +100,16 @@ public class Search extends JPanel implements ActionListener {
             motherFrm.filter.uncheckAll();
             infoPnlStack.clear();
             List<CourseData> list = DataBase.getCourseDataList(Long.parseLong(text));
-            NaverMap2.setCourseMap(list);
-            List<List<CourseData>> list2 = new ArrayList<List<CourseData>>();
-            list2.add(list);
-            CourseInfo courseInfo = new CourseInfo(this,list2);
-            pushinfoPnl(courseInfo);
+            if(list.isEmpty()){
+                noneMassage();
+            } else{
+                NaverMap2.setCourseMap(list);
+                List<List<CourseData>> list2 = new ArrayList<List<CourseData>>();
+                list2.add(list);
+                CourseInfo courseInfo = new CourseInfo(this,list2);
+                pushinfoPnl(courseInfo);
+            }
+
         }
     }
 
