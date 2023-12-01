@@ -40,6 +40,18 @@ public class Search extends JPanel implements ActionListener {
 
         add(searchPnl);
 
+        //for test
+        List<CourseData> list = new ArrayList<>();
+        CourseData data = new CourseData("TH1", 5, 156, 452, "여행지1","128.423238", "34.847749", 1, 2, "indoor", "문화/예술");
+        CourseData data2 = new CourseData("TH2", 5, 157, 452, "여행지2","128.417847", "34.846626", 1, 2, "indoor", "자연/힐링");
+        list.add(data);
+        list.add(data2);
+        NaverMap2.setCourseMap(list);
+        List<List<CourseData>> list2 = new ArrayList<List<CourseData>>();
+        list2.add(list);
+        CourseInfo courseInfo = new CourseInfo(this,list2);
+        pushinfoPnl(courseInfo);
+
         setVisible(true);
     }
 
