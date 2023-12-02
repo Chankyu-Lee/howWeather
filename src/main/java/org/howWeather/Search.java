@@ -37,6 +37,8 @@ public class Search extends JPanel implements ActionListener {
         searchPnl.add(searchFld);
         searchPnl.add(searchBtn);
         searchPnl.add(resetBtn); // searchPnl에 초기화 버튼 추가
+        searchBtn.setFont(new Font("맑은 고딕", Font.BOLD,13));
+        resetBtn.setFont(new Font("맑은 고딕", Font.BOLD,13));
 
         add(searchPnl);
 

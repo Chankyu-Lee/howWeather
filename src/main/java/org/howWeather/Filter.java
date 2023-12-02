@@ -58,6 +58,7 @@ public class Filter extends JPanel implements ActionListener {
 
         JButton applyBtn = new JButton("필터 적용");
         applyBtn.addActionListener(this);
+        applyBtn.setFont(new Font("맑은 고딕",Font.BOLD,13));
         add(applyBtn);
     }
 

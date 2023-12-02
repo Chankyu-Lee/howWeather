@@ -1,6 +1,7 @@
 package org.howWeather;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class CourseInfo extends JPanel implements ActionListener {
 
     CourseInfo(Search motherPnl, List<List<CourseData>> list){
         motherPnl.pushinfoPnl(this);
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        coursePnl.setLayout((new BoxLayout(coursePnl, BoxLayout.Y_AXIS)));
+        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        coursePnl.setLayout(new GridLayout(0,1));
         courseList = list;
         this.motherPnl = motherPnl;
         nextBtn.addActionListener(this);
@@ -33,17 +34,26 @@ public class CourseInfo extends JPanel implements ActionListener {
     }
 
     private void visibleCourseInfo(){
+        coursenameLbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        currentorderLbl.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        nextBtn.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        prevBtn.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+
         setCoursenameLbl();
         setcurrentorderLbl();
         add(coursenameLbl);
         addCourse();
         add(coursePnl);
 
-        JPanel downside = new JPanel();
-        downside.add(prevBtn);
-        downside.add(currentorderLbl);
-        downside.add(nextBtn);
-        add(downside);
+        JPanel downsidePnl = new JPanel();
+        prevBtn.setBackground(Color.WHITE);
+        downsidePnl.add(prevBtn);
+
+        downsidePnl.add(currentorderLbl);
+
+        nextBtn.setBackground(Color.WHITE);
+        downsidePnl.add(nextBtn);
+        add(downsidePnl);
         setMap();
     }
 
@@ -58,7 +68,12 @@ public class CourseInfo extends JPanel implements ActionListener {
     private void addCourse(){
         List<CourseData> list = courseList.get(currentcourse-1);
         for(CourseData coursedata : list){
-            buttons.add(new InfoButton(coursedata));
+            InfoButton btn = new InfoButton(coursedata);
+            btn.setBackground(Color.WHITE);
+            btn.setFont(new Font("맑은 고딕",Font.PLAIN,17));
+            btn.setMaximumSize(new Dimension(motherPnl.getWidth(),20));
+            btn.setHorizontalAlignment(SwingConstants.LEFT);
+            buttons.add(btn);
         }
         for(InfoButton btn : buttons) {
             coursePnl.add(btn);
