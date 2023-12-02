@@ -1,6 +1,7 @@
 package org.howWeather;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ public class CourseInfo extends JPanel implements ActionListener {
     private JButton nextBtn = new JButton(">");
     private JButton prevBtn = new JButton("<");
     private JPanel coursePnl = new JPanel();
+    private JPanel downsidePnl = new JPanel();
 
     private CourseWeather[][] weatherData;
 
@@ -45,7 +47,6 @@ public class CourseInfo extends JPanel implements ActionListener {
         addCourse();
         add(coursePnl);
 
-        JPanel downsidePnl = new JPanel();
         prevBtn.setBackground(Color.WHITE);
         downsidePnl.add(prevBtn);
 
@@ -53,6 +54,7 @@ public class CourseInfo extends JPanel implements ActionListener {
 
         nextBtn.setBackground(Color.WHITE);
         downsidePnl.add(nextBtn);
+
         add(downsidePnl);
         setMap();
     }
@@ -78,6 +80,7 @@ public class CourseInfo extends JPanel implements ActionListener {
         for(InfoButton btn : buttons) {
             coursePnl.add(btn);
         }
+
     }
 
     private void changeCourse(){
@@ -108,7 +111,7 @@ public class CourseInfo extends JPanel implements ActionListener {
                 changeCourse();
             }
         } else if (e.getSource() == prevBtn) {
-            if(currentcourse > 0){
+            if(currentcourse > 1){
                 currentcourse--;
                 changeCourse();
             }

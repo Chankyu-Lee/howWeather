@@ -187,14 +187,14 @@ public class Filter extends JPanel implements ActionListener {
         String regionCode = regionCodeMap.get(region);
         if (regionCode != null) {
             List<CourseData> courseList = DataBase.getCourseDataByRegion(regionCode);
-            List<List<CourseData>> list = new ArrayList<>();
+            List<List<CourseData>> resultList = new ArrayList<>();
             for(CourseData data: courseList){
-                list.add(DataBase.getCourseDataList(data.getCourseId()));
+                resultList.add(DataBase.getCourseDataList(data.getCourseId()));
             }
-            if(list.isEmpty()){
+            if(resultList.isEmpty()){
                 motherfrm.search.noneMassage();
             } else{
-                motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, list));
+                motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, resultList));
             }
 
         } else {
