@@ -6,5 +6,5 @@ public class Main {
         //DataBase.createTable();
 
         new Frame().initGUI();
-
-    }}
+    }
+}
