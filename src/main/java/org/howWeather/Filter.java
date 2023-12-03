@@ -178,5 +178,4 @@ public class Filter extends JPanel implements ActionListener {
             }
         }
     }
-
 }
