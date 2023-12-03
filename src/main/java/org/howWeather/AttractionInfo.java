@@ -135,7 +135,6 @@ public class AttractionInfo extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
         info.setCaretPosition(0);
     }
 }

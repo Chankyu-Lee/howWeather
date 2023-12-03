@@ -113,7 +113,6 @@ public class Search extends JPanel implements ActionListener {
                 CourseInfo courseInfo = new CourseInfo(this,list2);
                 pushinfoPnl(courseInfo);
             }
-
         }
     }
 
