@@ -50,7 +50,7 @@ public class Filter extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(150, 800));
 
         themeGrp = new FilterGroup("테마", new String[]{"문화/예술", "쇼핑/놀이", "자연/힐링", "종교/역사/전통", "체험/학습/산업", "캠핑/스포츠"});
-        regionGrp = new FilterGroup("지역", 
+        regionGrp = new FilterGroup("지역",
                 new String[]{"서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원특별자치도", "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"});
 
         add(regionGrp);
@@ -116,15 +116,17 @@ public class Filter extends JPanel implements ActionListener {
     private void printCourseByRegionAndTheme(String region, String theme) {
         List<CourseData> courseList = DataBase.getCourseDataByRegion(regionCodeMap.get(region));
         List<List<CourseData>> list = new ArrayList<>();
+        Set<Long> uniqueCourseIds = new HashSet<>(); // 중복 제거를 위한 Set
+
         for (CourseData courseData : courseList) {
-            if (courseData.getThemeName().equals(theme)) {
+            if (courseData.getThemeName().equals(theme) && uniqueCourseIds.add(courseData.getCourseId())) {
                 list.add(DataBase.getCourseDataList(courseData.getCourseId()));
             }
         }
-        if(list.isEmpty()){
+
+        if (list.isEmpty()) {
             motherfrm.search.noneMassage();
-        }
-        else{
+        } else {
             motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, list));
         }
     }
@@ -146,7 +148,6 @@ public class Filter extends JPanel implements ActionListener {
 
     private void printThemeCourse(List<String> themes) {
         List<CourseData> courseList = DataBase.getAllCourseData();
-        List<List<CourseData>> resultList = new ArrayList<>();
         Map<Long, List<CourseData>> courseDataMap = new HashMap<>();
 
         for (CourseData courseData : courseList) {
@@ -155,17 +156,17 @@ public class Filter extends JPanel implements ActionListener {
                 courseDataMap.put(ID, DataBase.getCourseDataList(ID));
             }
         }
-        resultList.addAll(courseDataMap.values());
 
-        for (Iterator<List<CourseData>> iterator = resultList.iterator(); iterator.hasNext(); ) {
+        List<List<CourseData>> resultList = new ArrayList<>(courseDataMap.values());
+
+        Iterator<List<CourseData>> iterator = resultList.iterator();
+        while (iterator.hasNext()) {
             List<CourseData> courseDataList = iterator.next();
             boolean isFiltered = true;
 
             for (String theme : themes) {
-                if (courseDataList.stream().anyMatch(courseData -> courseData.getThemeName().equals(theme))) {
+                if (courseDataList.stream().anyMatch(data -> data.getThemeName().equals(theme))) {
                     isFiltered = false;
-                } else {
-                    isFiltered = true;
                     break;
                 }
             }
@@ -175,28 +176,30 @@ public class Filter extends JPanel implements ActionListener {
             }
         }
 
-        if(resultList.isEmpty()){
+        if (resultList.isEmpty()) {
             motherfrm.search.noneMassage();
-        } else{
+        } else {
             motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, resultList));
         }
-
     }
 
     private void printRegionCourse(String region) {
         String regionCode = regionCodeMap.get(region);
         if (regionCode != null) {
             List<CourseData> courseList = DataBase.getCourseDataByRegion(regionCode);
-            List<List<CourseData>> resultList = new ArrayList<>();
-            for(CourseData data: courseList){
-                resultList.add(DataBase.getCourseDataList(data.getCourseId()));
-            }
-            if(resultList.isEmpty()){
-                motherfrm.search.noneMassage();
-            } else{
-                motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, resultList));
+            Map<Long, List<CourseData>> courseDataMap = new HashMap<>();
+
+            for (CourseData data : courseList) {
+                courseDataMap.put(data.getCourseId(), DataBase.getCourseDataList(data.getCourseId()));
             }
 
+            List<List<CourseData>> resultList = new ArrayList<>(courseDataMap.values());
+
+            if (resultList.isEmpty()) {
+                motherfrm.search.noneMassage();
+            } else {
+                motherfrm.search.pushinfoPnl(new CourseInfo(motherfrm.search, resultList));
+            }
         } else {
             System.out.println("해당 지역의 코드를 찾을 수 없습니다.");
         }

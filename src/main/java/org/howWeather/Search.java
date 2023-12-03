@@ -91,7 +91,9 @@ public class Search extends JPanel implements ActionListener {
 
     public void noneMassage(){
         JPanel nonePnl = new JPanel();
-        nonePnl.add(new JLabel("결과가 없습니다."));
+        JLabel noneLbl = new JLabel("결과가 없습니다.");
+        noneLbl.setFont(new Font("맑은 고딕", Font.BOLD,20));
+        nonePnl.add(noneLbl);
         pushinfoPnl(nonePnl);
     }
 
