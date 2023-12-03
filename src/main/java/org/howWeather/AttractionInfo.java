@@ -9,10 +9,12 @@ import javax.swing.text.*;
 public class AttractionInfo extends JPanel {
     Search motherPnl;
     JButton closeBtn = new JButton("X");
+    CourseWeather[] weathers;
 
     AttractionInfo(Search motherPnl, CourseData attraction, CourseWeather[] weathers) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.motherPnl = motherPnl;
+        this.weathers = weathers;
         closeBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -22,13 +24,23 @@ public class AttractionInfo extends JPanel {
             }
         });
         NaverMap2.setAttractionMap(attraction);
-        visibleinfo(attraction, weathers);
+        visibleinfo(attraction);
     }
 
-    private void visibleinfo(CourseData attraction, CourseWeather[] weathers){
+    private void visibleinfo(CourseData attraction){
         JPanel btnPnl = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnPnl.setBackground(Color.WHITE);
         closeBtn.setBackground(Color.WHITE);
+        JButton graphBtn = new JButton("그래프");
+        graphBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Graph(weathers);
+            }
+        });
+        graphBtn.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        graphBtn.setBackground(Color.WHITE);
+        btnPnl.add(graphBtn);
         btnPnl.add(closeBtn);
         add(btnPnl, BorderLayout.NORTH);
 
