@@ -16,6 +16,7 @@ public class Filter extends JPanel implements ActionListener {
     private FilterGroup regionGrp;
     Map<String, String> regionCodeMap;
 
+
     public Filter(Frame frm) {
         motherfrm = frm;
         VisibleFilter();
@@ -111,7 +112,18 @@ public class Filter extends JPanel implements ActionListener {
             }
         }
         return selectedItems;
-      
+    }
+    private void printCourseByRegionAndTheme(String region, String theme) {
+        List<CourseData> courseList = DataBase.getCourseDataByRegion(regionCodeMap.get(region));
+        List<List<CourseData>> list = new ArrayList<>();
+        Set<Long> uniqueCourseIds = new HashSet<>(); // 중복 제거를 위한 Set
+
+        for (CourseData courseData : courseList) {
+            if (courseData.getThemeName().equals(theme) && uniqueCourseIds.add(courseData.getCourseId())) {
+                list.add(DataBase.getCourseDataList(courseData.getCourseId()));
+            }
+        }
+
         if (list.isEmpty()) {
             motherfrm.search.noneMassage();
         } else {
@@ -192,4 +204,5 @@ public class Filter extends JPanel implements ActionListener {
             System.out.println("해당 지역의 코드를 찾을 수 없습니다.");
         }
     }
+
 }

@@ -7,5 +7,4 @@ public class Main {
 
         new Frame().initGUI();
 
-    }
-}
+    }}
