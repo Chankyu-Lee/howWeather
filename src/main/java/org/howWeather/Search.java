@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Search extends JPanel implements ActionListener {
@@ -25,6 +27,7 @@ public class Search extends JPanel implements ActionListener {
                 reset();
             }
         });
+        setPreferredSize(new Dimension(250,800));
         VisibleSearch();
     }
 
@@ -34,6 +37,8 @@ public class Search extends JPanel implements ActionListener {
         searchPnl.add(searchFld);
         searchPnl.add(searchBtn);
         searchPnl.add(resetBtn); // searchPnl에 초기화 버튼 추가
+        searchBtn.setFont(new Font("맑은 고딕", Font.BOLD,13));
+        resetBtn.setFont(new Font("맑은 고딕", Font.BOLD,13));
 
         add(searchPnl);
 
@@ -60,8 +65,10 @@ public class Search extends JPanel implements ActionListener {
     }
 
     public void clearinfoPnl(){
-        remove(infoPnl);
-        infoPnl = null;
+        if(infoPnl != null){
+            remove(infoPnl);
+            infoPnl = null;
+        }
         motherFrm.refresh();
         if(!(infoPnlStack.empty())){
             drawInfoPnl();
@@ -70,25 +77,42 @@ public class Search extends JPanel implements ActionListener {
 
     public void reset() {
         // 필터 초기화
-        //motherFrm.filter.unckeckAll();
+        motherFrm.filter.uncheckAll();
+
+        searchFld.setText("");
 
         // 결과 초기화
         infoPnlStack.clear();
         clearinfoPnl();
 
         // 지도 초기화
-        NaverMap2.setBasicMap(motherFrm.mapLbl);
+        NaverMap2.setBasicMap();
+    }
+
+    public void noneMassage(){
+        JPanel nonePnl = new JPanel();
+        JLabel noneLbl = new JLabel("결과가 없습니다.");
+        noneLbl.setFont(new Font("맑은 고딕", Font.BOLD,20));
+        nonePnl.add(noneLbl);
+        pushinfoPnl(nonePnl);
     }
 
     @Override
     public void actionPerformed(ActionEvent e){
         String text = searchFld.getText();
         if(!(text.isEmpty())){
-            //motherFrm.filter.unckeckAll();
+            motherFrm.filter.uncheckAll();
             infoPnlStack.clear();
-            NaverMap2.map_service(motherFrm, Long.parseLong(text));
-            AttractionInfo attractionInfo = new AttractionInfo(this,DataBase.getCourseDataList(Long.parseLong(text)).get(1));
-            pushinfoPnl(attractionInfo);
+            List<CourseData> list = DataBase.getCourseDataList(Long.parseLong(text));
+            if(list.isEmpty()){
+                noneMassage();
+            } else{
+                NaverMap2.setCourseMap(list);
+                List<List<CourseData>> list2 = new ArrayList<List<CourseData>>();
+                list2.add(list);
+                CourseInfo courseInfo = new CourseInfo(this,list2);
+                pushinfoPnl(courseInfo);
+            }
         }
     }
 
