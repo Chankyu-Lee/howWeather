@@ -56,7 +56,7 @@ public class CourseInfo extends JPanel implements ActionListener {
     private void addCourse(){
         List<CourseData> list = something.get(currentcourse);
         for(CourseData coursedata : list){
-            buttons.add(new InfoButton(coursedata.getTourismName(), coursedata.getCourseOrder()));
+            buttons.add(new InfoButton(coursedata.getTourismName(), coursedata.getCourseId()));
         }
         for(InfoButton btn : buttons) {
             coursePnl.add(btn);
@@ -83,27 +83,29 @@ public class CourseInfo extends JPanel implements ActionListener {
                 currentcourse--;
                 changeCourse();
             }
-        } else{
-
-            motherPnl.clearinfoPnl();
-            //motherPnl.infoPnl = new AttractionInfo(motherPnl, something.get(currentcourse).get());
         }
     }
 
-    class InfoButton extends JButton implements ActionListener{
-        private long order;
+    class InfoButton extends JButton implements ActionListener {
+        private long courseId;
 
-        public InfoButton(String text, long order){
+        public InfoButton(String text, long courseId) {
             super(text);
-            this.order = order;
+            this.courseId = courseId;
             addActionListener(this);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            AttractionInfo attractionInfo = new AttractionInfo(motherPnl, something.get(currentcourse).get((int)order));
-            motherPnl.pushinfoPnl(attractionInfo);
-            motherPnl.drawInfoPnl();
+            if (e.getSource() instanceof InfoButton) {
+                InfoButton sourceButton = (InfoButton) e.getSource();
+                NaverMap2.map_service((Frame) SwingUtilities.getWindowAncestor(sourceButton), courseId);
+                AttractionInfo attractionInfo = new AttractionInfo(motherPnl, DataBase.getCourseDataList(courseId).get(0));
+                motherPnl.pushinfoPnl(attractionInfo);
+                motherPnl.drawInfoPnl();
+            }
+
         }
     }
+
 }
